@@ -1,0 +1,164 @@
+
+#wrapper{
+  display: flex;
+  border-width: 10px;
+  padding-left: 240px;
+  transition: 300ms;
+}
+aside{
+  width: 240px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  overflow-y: scroll;
+
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
+  padding: 0 20px;
+  background-color: hsl(var(--ui-color-background-100));
+}
+aside::-webkit-scrollbar{
+  display: none;
+}
+
+
+#aside-logo{
+  height: 90px;
+  /* margin-bottom: 50px; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 0;
+  column-gap: 10px;
+}
+
+.aside-menu-item{
+  cursor: pointer;
+  transition: 500ms;
+  display: flex;
+  align-items: center;
+  border-radius: 10px;
+  padding: 10px 20px;
+  column-gap: 10px;
+  font-size: var(--font-base);
+  color: hsl(var(--ui-color-foreground-090));
+  position:relative;
+}
+.aside-menu-item:hover, .aside-menu-item.active{
+  background-color: hsl(var(--ui-color-background-090));
+  /* transform: translateX(100px); */
+  /* box-shadow: 2px 4px 12px rgba(0, 0, 0 , 0.08); */
+  /* color: hsl(var(--ui-color-primary)); */
+}
+
+ul{
+  list-style: none;
+  padding: 0;
+}
+
+.menu{
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+}
+
+li .menu{
+  row-gap: 3px;
+  margin-top: 3px;
+}
+
+
+li > ul{
+  padding-left: 35px;
+}
+
+.sub-icon{
+  position: absolute;
+  left: -12px;
+  top: 8px;
+}
+.aside-menu-item > p{
+  flex-grow: 1;
+  margin: 0;
+}
+
+
+
+#aside-logo > img{
+  height: 100%;
+}
+
+.logo-text{
+  font-size: var(--font-xl);
+  font-weight: bold;
+  color: hsl(var(--ui-color-primary));
+}
+
+
+.user-text{
+  font-size: var(--font-xl);
+  font-weight: bold;
+  color: hsl(var(--ui-color-primary));
+}
+.user-text > span{
+  color: hsl(var(--ui-color-foreground-100));
+  font-size: var(--font-sm);
+}
+
+
+
+#main-wrapper{
+  flex-grow:1;
+  
+}
+
+main{
+  padding: 30px 20px;
+}
+/* 헤더 영역 디자인  */
+header{
+  height: 90px;
+  position:sticky;
+  top: 0;
+
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  background-color: hsl(var(--ui-color-background-100));
+  /* backdrop-filter: blur(5px); */
+
+  justify-content: space-between;
+}
+/* footer 영역 디자인  */
+footer{
+  border-top: 1px solid hsl(var(--ui-color-foreground-000));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 50px 0;
+}
+
+/* 메뉴 아이콘 */
+/* 컴퓨터일때는 보이지 않아야 한다 */
+.menu-icon{
+  display: none;
+  cursor: pointer;
+}
+
+/* 핸드폰으로 열었을때 */
+@media screen and (max-width:600px) {
+  /* aside를 안보이게 */
+  aside{
+    display: none;
+  }
+  /* wrapper의 왼쪽 안쪽 여백을 0으로 */
+  #wrapper{
+    padding-left: 0;
+  }
+  /* 메뉴 아이콘을 보이게 */
+  .menu-icon{
+    display: block;
+  }
+}

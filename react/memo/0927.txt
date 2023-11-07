@@ -1,0 +1,131 @@
+비동기들
+    fetch
+    axios.get
+    axios.post
+    axios...
+
+    pool.query
+
+async await 문법 javascript
+    비동기 함수를 동기 함수처럼 사용하고 싶어
+
+    비동기 함수 앞에 await를 사용하면 동기함수로 해석한다
+    await를 썼으면 await를 감싸고있는 함수를 async함수라고
+    알려줘야 한다!!!
+
+    일반적인 함수
+    async function 함수이름() {
+        await
+    }
+    익명함수
+    async function (){
+
+    }
+
+    화살표 함수
+    async ()=> {
+
+    }
+
+
+axios.get('/users').then((res)=>{
+    // get함수가 정상적으로 끝났을때 실행되는 공간(동기적으로)
+    // res 에는 객체(status, statusCode, statustext, data, ...)
+
+}).catch((err)=> {
+    // get함수가 오류가 발생하면서 끝났을때 실행되는 공간(동기적으로)
+    // err에는 에러 객체(에러정보, 에러이름, response, ...)
+})
+
+
+****pool.query('SELECT * FROM tmp, (err, result, fields)=> {
+    // 이공간은 sql이 끝나고 동기적으로 실행되는 곳
+    // err 에는 오류발생하면 err객체 오류 안발생하면 null
+
+    // result에는 ? 정상적으로 끝나면 결과(배열, 객체) 오류발생시 undefined
+
+    // feilds에는 ? 정상적으로 끝나면 각 컬럼에대한 정보 오류발생 혹은 SELECT 아닌경우 undefined
+}');
+
+기존 동기함수가 비동기 함수라면???
+ceil(3.5) => 4 올림함수라서
+
+let res = ceil(3.5);
+console.log(res + 7); 4 + 7 => 11
+
+ceil(3.5).then((res)=> {
+    console.log(res + 7);
+})
+
+이 비동기 함수를 동기처럼 쓸수 있는법 -> 위에꺼랑 같다
+let res = await ceil(3.5);
+console.log(res + 7); 4 + 7 => 11
+
+axios.get('/users').then((res)=>{
+    console.log(res);
+}).catch((err) => {
+    console.log(err);
+});
+
+try{
+    let res = await axios.get('/users');
+}catch(err){
+    console.log(err);
+}
+
+// 비동기
+doubleMath(3.5).then((a,b)=>{
+    console.log(a);
+    console.log(b);
+});
+
+// 동기적
+
+let res = await doubleMath(3.5); --> [4,3] 기다렸다가 올림하고 내림해라 그래서 두개가 출력됨
+console.log(res[0]); --> 4
+console.log(res[1]); --> 3 내림
+
+// 비동기
+pool.query('SELECT * FROM tmp, (err, result, fields)=> {
+    if(err != null){
+        console.log(err);
+    }else{
+        console.log(result);
+        console.log(fields);
+    }
+})
+
+// 동기적으로 바꾸기
+try{
+    let [result, fields] = await pool.query('SELECT * FROM tmp'); // [ , ]
+    console.log(result);
+    console.log(fields);
+}catch(err) {
+     console.log(err);
+}
+
+
+doubleMath(3.5).then((a,b)=>{
+    doubleMath( a + 7.2).then((a,b)=>{
+        console.log(a);
+        doubleMath(b+ 3.2).then((a,b)=> {
+
+        }).catch((err)=> {
+
+        });
+    }).catch((err)=>{
+
+    })
+}).catch((err)=> {
+    console.log(err);
+}); // 알기가 어렵다
+
+비동기 함수로 바꾸기
+try{
+    let [res1, res2] = await doubleMath(3.5);
+    let [res3, res4] = await doubleMath(res1 + 7.2);
+    console.log(res3);
+    let [res5, res6] = await doubleMath(res4 + 3.2);
+}.catch(err) {
+    console.log(err);
+}

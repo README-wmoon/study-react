@@ -1,0 +1,109 @@
+react 
+  1. index.html 을 화면에 렌더링을 한다
+    (id가 root인 비어있는 div태그가 그려진다)
+  2. index.js 가 
+    id가 root인 div태그를 찾아서 그 속에다가 
+    <App/>을 그려줘~
+  3. App.js 안에있는 App 컴포넌트가 그려진다(비어있는 div 안쪽에)
+
+next js 
+  1. app폴더 안에있는 layout.js 가 그려진다
+    html태그와 body태그 를 그려줌 
+  2. body태그 안쪽에는 app폴더 안에있는 page.js 가 그려진다 
+
+  app 폴더 안에 또다른 폴더를 만들고, 그 폴더 안에 page.js 를 만들면 
+  자동으로 라우팅이 된다 
+
+  ex) 
+  app/test/page.js 
+  
+  const AAA = ()=>{
+    return (<h1>안녕</h1>);
+  }
+  export default AAA;
+
+  경로 : localhost:3000/test 
+  --> 
+  app/layout.js 가 그려진다 
+  <html>
+    <body>
+      
+    </body>
+  </html>
+
+  app/test/page.js 가 body태그 안쪽에 그려진다
+  <html>
+    <body>
+      <h1>안녕</h1>
+    </body>
+  </html> 
+
+react 18버전 업데이트된 내용 
+  react로 server side rendering이 가능 해짐 
+
+
+Client Side Rendering(CSR)
+  서버로부터 필요한 데이터만 받아오고 
+  받아온 데이터를 브라우저가 javascript를 실행함으로써 
+  직접 html 파일을 만드는 것
+
+Server Side Rendering(SSR)
+  서버에서 완성된 html을 받아오고 
+  브라우저는 단순히 받아논 html 파일을 
+  보여주는 것
+
+리액트는 기본적으로 모든 컴포넌트가 
+CSR으로 동작 하도록 만들어져 있다 
+  --> 18버전이 되며 SSR 방식으로 동작하는 컴포넌트 업데이트 
+  (여전히 기본적으로 컴포넌트를 만들면 Client 컴포넌트로 만들어짐)
+
+nextjs 13버전 업데이트가 되면서 리액트의 서버컴포넌트를 적극적으로 도입했고,
+nextjs에서 만드는 기본 컴포넌트는 모두 서버 컴포넌트로 만들어 진다 
+
+순수 react에서 내가 만든 컴포넌트는 클라이언트 컴포넌트이고, 
+서버 컴포넌트로 사용하고 싶으면 추가적인 코드를 작성 
+
+next에서 기본으로 만든 컴포넌트는 서버 컴포넌트이고 
+클라이언트 컴포넌트로 사용하고 싶으면 추가적인 코드를 작성 
+
+emotion 과 같은 라이브러리는 클라이언트 컴포넌트에서 동작하도록 만들어놓았다
+
+next에서 만든 컴포넌트를 서버컴포넌트가 아닌 클라이언트 컴포넌트로 
+동작하게 만드는 방법 
+파일 맨 위에다 
+'use client'
+를 추가한다 
+
+
+next js 컴포넌트를 만들 때 항상 맨위에 
+'use client' 를 작성하여 
+react의 클라이언트 컴포넌트를 사용해서 공부
+
+image 다루기 
+이미지는 public 폴더 안에 넣어 놓는다 
+이미지를 사용할 때는 
+next/image 에서 Image 컴포넌트를 사용해야 한다
+
+
+<Image width={100} height={100} src={이미지경로} alt={대체텍스트} />
+이때 이미지 경로는 
+'/' 부터 시작을 하는데, 그 이유는 
+기본 경로가 public폴더로 설정되어있기 때문이다 
+
+'/tmp.jpg'; --> public/tmp.jpg 
+'/a/b/c.png'; --> public/a/b/c.png 
+
+mui icon 
+  아이콘을 무료로 사용할 수 있도록 제공해주는 
+  라이브러리 
+
+
+next js에서 사용하는 문법은 모두 리액트의 문법이다 
+("use client", <Image/> 만 빼고)
+따라서 리액트에서 그대로 사용하면 된다 
+리액트에서 이미지는 기본 html <img/> 사용
+next에서 이미지는 <Image/> 를 사용한다 
+
+리액트에서 css파일이 여러개라고 하더라도 
+모두 통합되어 적용되기 때문에 웬만하면 리액트 css파일은
+index.css 하나만 사용한다 

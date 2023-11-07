@@ -1,0 +1,9 @@
+DashboardHeader
+CareerViewTable
+...
+    로그인을 해야지만 볼 수 있는 컴포넌트들이 존재
+    --> accessToken을 사용하는 컴포넌트 들
+    항상 accessToken이 잘 존재하는지를 검사
+    --> useEffect 에다가 accessToken이 있는지 없는지 확인 필요하다
+    매번 useEffect를 길게 쓰기 귀찮으니깐 custom hook을 만들 수 있다
+    

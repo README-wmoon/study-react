@@ -1,0 +1,60 @@
+use... 함수는 리액트 hook함수
+  useState 함수 : state변수를 만들고 싶을 때 사용
+  let a = 10;
+
+a = 15; // --> re-rendering XXX
+
+let[a, setA] = useState(10);
+setA(15); // --> re-redering OO
+
+useState --> re-rendering 떄문에 쓰는것
+
+useEffect --> 기존게 있던게 사라지고 새롭게 저장되는것
+    useEffect(함수, 의존성배열);
+        만일 의존성 배열이 비어있는 배열이라면
+        앞에있는 함수는 최초 렌더링 될때만 실행이 된다
+
+        만일 의존성 배열에 변수가 들어있다면
+        그 변수가 변할때 마다 앞에있는 함수가 실행이 된다
+
+        useEffect의 인자로 전달되는 함수 부분에 함수를 return 할 수 있다.
+        이 때 return되는 함수를 cleanup 함수라고 한다
+
+    useEffect(()=>{return ()=> {//cleanup 함수}}, []);
+
+        cleanup 함수는 unmount 되기전에 실행이 되는 함수를 의미한다
+    
+    특정 코드가 특정 상황에서만 실행이 되어야 할때
+    특정상황?
+        컴포넌트가 최초로 그려질떄 한번만
+        컴포넌트가 re-rendering 될떄마다 실행
+        컴포넌트가 사라질때(unmount) 될때 실행
+
+
+배열
+map 함수
+    기존 배열 기반으로 같은 크기의 새로운 배열만들기
+
+filter함수
+    기존 배열 기반으로 조건에 맞는 요소들만 추출하여
+    새로운 배열 만들기
+
+배열.filter((e, idx, ar)=>{return true/false});
+
+기존 배열의 요소갯수만큼 반복 하면서
+true가 return되는 요소들만 모아 새로운
+배열로 만든다
+
+ar = [10, 50, 61, 50, 71, 231];
+ar.filter((e)=>{return e > 50});
+
+[61, 71, 231]
+
+number = 1;
+ar = [1,2,3];
+ar.filter((e) => {return e !== number})
+
+[1 , 3]
+
+ar은 여전히 [1,2,3]
+

@@ -1,0 +1,41 @@
+1. 리액트가 로그인 요청
+
+2. 익스프레스가 요청을 받아와서 mysql에서 존재하는지 확인
+    존재 한다면 jwt 토큰 발행(시간제약 가능) 후 리액트한테 전달
+
+3. 리액트는 토큰을 받아와서
+    로컬스토리지(브라우저)에도 저장
+    전역state변수(어떤 컴포넌트에서도 쓸수있는 state변수)에도 저장
+
+로그인 된상태: localstorage에도 token이 저장되어있고,
+                전역 state변수에도 저장되어있는 상태
+
+로그인 안된 상태 : localstorage와 전역 state변수에 token이 저장되지 않은상태
+                    토큰이 저장되어있지만 만료된상태(로그인 시간이 오래되어서)
+
+대시보드 레이아웃은 로그인 한 사람만 봐야한다(권한존재)
+
+front에서 server로 데이터 넘기기
+GET요청의 경우에는 주소에다가 데이터를 넘긴다
+    1. 쿼리 스트링
+        리액트에서
+            '/api/users' GET요청해줘!!! --> 회원전체조회야
+            '/api/users?family_name=배&order=like' GET요청 -> 두개의 값 전달
+
+        익스프레스 주소 
+        'api/users'     GET요청하면 회원전체 조회
+        조회하고자 하는 성씨는 react에서 family_name이라는 변수에 담아왔다
+
+
+        회원전체 조회하고 싶은데 성씨가 '김'씨인 회원전체조회
+        
+    
+    2. 파라미터(시멘틱) -> 언제 사용? -> 각각을 유일하게 구분할수 있을때
+        /api/users/abc@naver.com
+        /api/users/test@naver.com
+
+        /api/users/:email
+
+        /api/users/email=abc@naver.com  GET
+
+POST 요청의 경우에는 body에다 담아서 넘긴다

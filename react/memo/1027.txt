@@ -1,0 +1,14 @@
+/api/activites?order=aaa&page=4&limit=10
+    order, page, limit 은 변수가 된다
+    주소에다가 ? 이후에 나오는 부분은
+    변수가 되며 & 로 연결이 된다
+    order에는 'aaa'
+    page에는 '4'
+    limit에는 '10'
+    이 각각 대입되어있음
+
+    이러한 방식을 query-string 이라고 얘기한다
+    
+sql 테이블 합치기
+    join
+    서브쿼리

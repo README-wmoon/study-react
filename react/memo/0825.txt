@@ -1,0 +1,88 @@
+next js 이미지
+public  폴더에 있는 이미지 --> '/a.png' --> public/a.png
+<Image src="" alt="" width={} height={}/>
+
+react js 이미지
+    public 폴더에 있는 이미지 --> '/a.png' --> public/a.png
+    <img src="" alt="" />
+
+props와 조건부 렌더링
+    조건에 따라서 적용되어야 하는 css가 달라져야한다
+
+emotion에서
+`
+
+`
+
+안에는 css의 속성을 작성하고, 이것이 css로 반영이 되는데,
+만일 ``안에 ${} 이 부분에 함수를 넣어주면
+해당 함수의 return되는 값이 ${} 자리에 쓰여있다고 판단한다
+
+ex)
+const TItle = styled.h1`
+    color:${() => {return 'aaa'}};
+`;
+
+const Title = styled.h1`
+    color:red;
+`;
+
+이때 해당 함수의 매개변수에는 props(속성들)이 객체로 담겨서 전달이 된다.
+
+<Title a='ddd' b='ccc'>abc</Title>
+
+{
+    a:'ddd',
+    b:'ccc',
+    children:'abc',
+    theme:{}
+}
+
+--> 매개변수에 들어있는 속성 값에 따라서 return되는 값을 다르게 해주면
+css가 다르게 적용되는 컴포넌트가 만들어진다
+
+${} 안에 있는 함수의 객체가 return되는 경우에는 해당 객체를
+css로 해석하여 적용 시켜준다
+
+-------------------------------------------------------
+hover와 같은경우...
+
+자기자신 안에있는 p태그
+자기자신이 hover가 된다면
+
+
+-------------------------------------------------------
+props로 문자열값이 아닌 자바스크립트 값(숫자, boolean, 객체 ...)을 전달하고 싶으면?
+props에 없다면 ??
+
+자바스크립트
+삼항연산자
+    값1 ? 값2 : 값3
+        --> 값1이 true면 값2가 결과, 값1이 false면 값3이 결과
+
+논리연산자
+    값1 && 값2
+        true && true --> true
+        true && false --> false
+        false && true --> false
+        false && false --> false
+
+    값1 || 값2
+        true || true --> true
+        true || false --> true
+        false || true --> true
+        false || false --> false
+
+맥락 평가에 의해 논리연산이 이루어 진다.
+
+truthy
+    --> javascript에서 boolean으로 바꿨을 떄 true로 바뀌는 값
+
+falsy
+    --> javascript에서 boolean으로 바꿨을 떄 false로 바뀌는 값
+    false
+    0
+    0.0
+    ''
+    null
+    undefined
