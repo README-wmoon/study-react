@@ -27,6 +27,7 @@ import ActivityPage from './pages/dashboard/activity';
 import RefTestComponent from './aaa/day12/refTest';
 import TodoPage from './pages/dashboard/todo';
 import ActivityDetailPage from './pages/dashboard/activityDetail';
+import ActivityWritePage from './pages/dashboard/activityWrite';
 
 const router = createBrowserRouter([
   // {path:'/', element:<Bae/>, errorElement:<ErrorPage/>},
@@ -47,7 +48,7 @@ const router = createBrowserRouter([
   {path:'/career', element:<CareerPage/>},
   {path:'/activity', element:<ActivityPage/>},
   {path:'/activity/:id', element:<ActivityDetailPage/>},
-  
+  {path:'/activity/new', element:<ActivityWritePage/>},
 
   {path:'/day12/refTest', element:<RefTestComponent/>},
   {path:'/todo', element:<TodoPage/>}
