@@ -536,10 +536,22 @@ app.get('/api/activities/:id', async(req, res) => {
 
 app.get('/api/comments', async(req, res)=>{
     const activityId = Number(req.query.activityId);
+    const limit = Number(req.query.limit); //몇개
+    const page = Number(req.query.page); // 몇페이지?
+    const offset = (page -1) * limit;
+    let sql = `
+        select * from tbl_comments
+        where activity_id = ?
+        order by created_date asc
+        limit ? offset ?;
+    `;
+
+
+
     try{
         const token =req.headers.authorization.replace('Bearer ', '')
         let user = jwt.verify(token, process.env.JWT_SECRET);
-        let [results] = await pool.query('select * from tbl_comments where activity_id = ? order by created_date asc', [activityId])
+        let [results] = await pool.query(sql, [activityId, limit, offset])
 
 
         results = results.map((el)=> ({...el, owner:el.writer_email === user.email}))
@@ -585,6 +597,28 @@ app.delete('/api/comments', async(req, res)=>{
         res.json('성공');
     }catch(err){
         res.status(500).json('오류발생');
+    }
+});
+
+app.put('/api/comments', async (req, res)=>{
+    const id = req.body.id;
+    const content = req.body.content;
+    const token = req.headers.authorization.replace('Bearer ', '');
+    const user = jwt.verify(token, process.env.JWT_SECRET);
+    let sql = `
+            update tbl_comments
+            set content = ?, updated_date = now()
+            where id = ?
+    `;
+
+    try{
+            await pool.query(sql, [content, id]);
+            // console.log("댓글테스트", result);
+            let [rows] = await pool.query('select * from tbl_comments where id=?', [id]);
+            res.json({...rows[0], owner: rows[0].writer_email === user.email});
+
+    }catch(err){
+            res.status(500).json('mysql 오류');
     }
 });
 
