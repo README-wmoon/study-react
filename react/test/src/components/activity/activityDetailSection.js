@@ -4,6 +4,7 @@ import { BoardContent, BoardDetailWrap, BoardInfoWrap, BoardTitle, WriteBtn } fr
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { UserContext } from "../../App";
+import { useNavigate } from "react-router-dom";
 
 const ActivityDetailSection = (props)=> {
     
@@ -29,6 +30,8 @@ const ActivityDetailSection = (props)=> {
         // imgUrl : []
     // });
     const {accessToken} = useContext(UserContext);
+
+    const navigate = useNavigate();
     
     useEffect(()=>{
         let tmp = async ()=> {
@@ -79,6 +82,17 @@ const ActivityDetailSection = (props)=> {
         }
     }
 
+    let onDeleteClick = async() => {
+        try{
+            await axios.delete(`/api/activities/${props.activityId}`, {headers: {Authorization: `Bearer ${accessToken}`}});
+            navigate('/activity', {replace: true});
+
+        }catch(err){
+            alert('삭제 실패.ㅠㅠ');
+        }
+        
+    }
+
     return(
         <section>
             <BoardDetailWrap>
@@ -114,7 +128,7 @@ const ActivityDetailSection = (props)=> {
                 activity?.owner === true &&
                 <div style={{alignSelf: 'flex-end',display: 'flex', columnGap: '10px'}}>
                     <WriteBtn>수정하기</WriteBtn>
-                    <WriteBtn style={{backgroundColor: 'red'}}>삭제하기</WriteBtn>
+                    <WriteBtn onClick={onDeleteClick} style={{backgroundColor: 'red'}}>삭제하기</WriteBtn>
                 </div>
             }
         </section>

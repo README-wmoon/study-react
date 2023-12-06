@@ -28,6 +28,7 @@ import RefTestComponent from './aaa/day12/refTest';
 import TodoPage from './pages/dashboard/todo';
 import ActivityDetailPage from './pages/dashboard/activityDetail';
 import ActivityWritePage from './pages/dashboard/activityWrite';
+import ActivityUpdatePage from './pages/dashboard/activityUpdate';
 
 const router = createBrowserRouter([
   // {path:'/', element:<Bae/>, errorElement:<ErrorPage/>},
@@ -48,6 +49,7 @@ const router = createBrowserRouter([
   {path:'/career', element:<CareerPage/>},
   {path:'/activity', element:<ActivityPage/>},
   {path:'/activity/:id', element:<ActivityDetailPage/>},
+  {path:'/activity/:id/update', element:<ActivityUpdatePage/>},
   {path:'/activity/new', element:<ActivityWritePage/>},
 
   {path:'/day12/refTest', element:<RefTestComponent/>},

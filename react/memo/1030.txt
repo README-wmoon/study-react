@@ -1,7 +1,7 @@
 sql 조건 like
     select 컬럼1, 컬럼2
     from 테이블이름
-    where 컬럼 = 5;
+    where 컬럼 like '패턴';
 
 패턴
     %   : ~로 해석

@@ -69,7 +69,7 @@ app.get('/api/loggedInEmail', (req,res)=>{
         let result = jwt.verify(token, process.env.JWT_SECRET)
         // console.log(result);
 
-        res.end(result.email);    
+        res.send(result.email);    
 
     }catch(err){
         console.log(err);
@@ -476,6 +476,122 @@ app.delete('/api/like', async(req,res)=>{
     }
 })
 
+// multer 라이브러리 설정
+const multer = require('multer');
+const uuid = require('uuid');
+
+
+const upload = multer({
+    storage:multer.diskStorage({
+        destination: (req, file, cb)=> {
+            cb(null, '../public/images/');
+        },
+        filename: (req, file, cb)=>{
+            let id = uuid.v4();
+            let now = new Date();
+            let fileName = `${id}${now.getSeconds()}${file.originalname}`;
+            cb(null, fileName);
+        }
+    }),
+    limits:{fileSize : 1024 * 1024 * 5} // 5메가바이트
+});
+
+// 파일 sync 라이브러리
+const fs = require('fs');
+
+app.put('/api/activities',upload.array('images'), async (req, res)=>{
+    // console.log(req.files);
+    // console.log(req.body);
+    // console.log(req.headers.authorization);
+
+    let sql = `
+        delete from tbl_activity_img
+        where img_url = ?
+    `;
+
+    console.log(req.body.deleteImg);
+    const deleteImg = JSON.parse(req.body.deleteImg);
+    // const deleteImg = req.body.deleteImg;
+    try{
+        for(let i =0; i<deleteImg.length; i++) {
+            console.log(deleteImg[i]);
+            await pool.query(sql, [deleteImg[i]]); // 테이블에서 이미지 삭제
+            fs.unlinkSync(`../public${deleteImg[i]}`); // 폴더에서 이미지 삭제
+        }
+    
+        sql = `
+            update tbl_activities
+            set title=?, content=?, updated_date=now()
+            where id = ?
+        `;
+    
+        await pool.query(sql, [req.body.title, req.body.content, req.body.id]);
+        
+        sql = `
+            insert into tbl_activity_img
+            values(?, ?)
+        `;
+
+        for(let i=0; i < req.files.length; i++){
+            await pool.query(sql, [Number(req.body.id), `/images/${req.files[i].filename}`]);
+
+        }
+        
+        res.json({id:Number(req.body.id)});
+        
+    }catch(err){
+        console.log(err)
+        res.status(500).json('에러발생!!@');
+    }
+})
+
+
+app.post('/api/activities',upload.array('images'), async(req, res)=>{
+    // console.log(req.files);
+    // console.log(req.body);
+    // console.log(req.headers.authorization);
+    // upload.array('images') 떄문에 이미 이미지 업로드 되었고, 그 뒤에
+
+    // mysql에 게시글 제목, 내용, 작성자, 작성일자 insert into
+    const token = req.headers.authorization.replace('Bearer ', '');
+    const user = jwt.verify(token, process.env.JWT_SECRET);
+    
+    const {title, content} = req.body;
+    // req.files[0].fliename
+    try{
+        let sql = `
+        insert into tbl_activities
+        (title, content, writer_email, activity_view)
+        values
+        (?, ?, ?, 0);
+        `;
+        let [result] = await pool.query(sql, [
+            title,
+            content,
+            user.email
+        ]);
+        // result.insertId --> 방금 추가된 행의 id 값
+        // console.log(result);
+
+        // 이미지 경로도 mysql의 tbl_activity_img 에 올리기
+        sql = `
+        insert into tbl_activity_img
+        values
+        (?, ?);
+        `;
+        for(let i=0; i<req.files.length; i++) {
+            await pool.query(sql, [result.insertId, '/images/' + req.files[i].filename]);
+        }
+
+        // react에게 응답
+        res.json({id: result.insertId})
+
+    }catch(err){
+        res.status(500).json('오류발생응@@@')
+    }
+
+})
+
 app.get('/api/activities/:id', async(req, res) => {
     const id = req.params.id;
     const token = req.headers.authorization.replace('Bearer ', '');
@@ -530,7 +646,74 @@ app.get('/api/activities/:id', async(req, res) => {
 
     }catch(err){
         console.log(err);
-        res.status(500).json('오류발생');
+        res.status(500).json('오류발생@@!');
+    }
+})
+
+app.delete('/api/activities/:id', async(req, res)=>{
+
+    try{
+        // 1. 로그인 한 사람의 email
+        let token = req.headers.authorization.replace('Bearer ', '');
+        let user = jwt.verify(token, process.env.JWT_SECRET);
+    
+        // user.email --> 로그인 한 사람의 이메일
+        let id = Number(req.params.id) // 삭제하려는 게시글 아이디
+    
+        let sql = `
+            select * from tbl_activities
+            where id = ?
+        `;
+        let [rows] = await pool.query(sql, [id]);
+        if(rows[0].writer_email !== user.email){
+            res.status(403).json('접근 권한 없음');
+            return;
+        }
+        sql = `
+            delete from tbl_comments
+            where activity_id = ?
+    
+        `;
+    
+        await pool.query(sql, [id])
+    
+        sql = `
+            delete from tbl_activity_like
+            where activity_id = ?
+    
+        `;
+    
+        await pool.query(sql, [id]);
+    
+        sql = `
+            select * from tbl_activity_img
+            where activity_id = ?
+        `;
+    
+        let [imgs] = await pool.query(sql, [id]);
+        for(let i = 0; i< imgs.length; i++) {
+            fs.unlinkSync(`../public${imgs[i].img_url}`);
+        }
+
+
+        sql = `
+            delete from tbl_activity_img
+            where activity_id = ?
+        `;
+    
+        await pool.query(sql, [id]);
+        
+    
+        sql = `
+            delete from tbl_activities
+            where id = ?
+        `;
+        pool.query(sql,[id]);
+
+        res.json('삭제 성공');
+
+    }catch(err){
+        res.status(500).json('삭제 오류발생');
     }
 })
 
@@ -560,7 +743,7 @@ app.get('/api/comments', async(req, res)=>{
         res.json(results);
 
     }catch(err){
-        res.status(500).json('오류발생');
+        res.status(500).json('오류발생스@@@@');
     }
 
 })
